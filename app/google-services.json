@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "524953979149",
+    "project_id": "hotelintroduce",
+    "storage_bucket": "hotelintroduce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524953979149:android:06b683f50a047c777dc844",
+        "android_client_info": {
+          "package_name": "com.introduce.hotel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOPyL2JMMuH_TrMPuSm_A1aHwKLX-CgwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
