@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.introduce.hotel.R;
 import com.introduce.hotel.model.Hotel;
+import com.squareup.picasso.Picasso;
 
 public class HotelAdapter extends RecyclerView.Adapter<HotelViewHolder> {
     List<Hotel> Cities;
@@ -35,7 +36,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelViewHolder> {
         // use this function to put data on the UI
         Hotel hotel = Cities.get(position);
 
-        holder.cityImage.setImageBitmap(hotel.getImage());
+        Picasso.get().load(hotel.getImage()).into(holder.cityImage);
         holder.cityName.setText(hotel.getCityName());
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {

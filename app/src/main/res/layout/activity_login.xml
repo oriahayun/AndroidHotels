@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".LoginActivity">
+    tools:context=".view.LoginActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -49,7 +49,6 @@
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:hint="Email"
-                    android:textColor="@color/colorAccent"
                     android:layout_marginRight="10dp"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
@@ -80,7 +79,6 @@
                         android:hint="Password"
                         android:inputType="textPassword"
                         android:maxLines="1"
-                        android:textColor="@color/colorAccent"
                         android:singleLine="true"
                         android:textSize="16dp" />
                 </RelativeLayout>

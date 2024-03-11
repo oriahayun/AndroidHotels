@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/hotelListFragment"
+    android:id="@+id/nav_graph">
     <fragment
         android:id="@+id/hotelListFragment"
         android:name="com.introduce.hotel.view.HotelListFragment"
@@ -27,29 +26,6 @@
         android:id="@+id/profileFragment"
         android:name="com.introduce.hotel.view.ProfileFragment"
         android:label="ProfileFragment" />
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.introduce.hotel.view.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_registerFragment"
-            app:destination="@id/registerFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_hotelListFragment"
-            app:destination="@id/hotelListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/registerFragment"
-        android:name="com.introduce.hotel.view.RegisterFragment"
-        android:label="RegisterFragment" >
-        <action
-            android:id="@+id/action_registerFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_registerFragment_to_hotelListFragment"
-            app:destination="@id/hotelListFragment" />
-    </fragment>
     <fragment
         android:id="@+id/addHotelFragment3"
         android:name="com.introduce.hotel.view.AddHotelFragment"

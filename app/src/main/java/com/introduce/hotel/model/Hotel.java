@@ -7,13 +7,13 @@ import java.util.List;
 
 public class Hotel implements Serializable {
     private String key;
-    private Bitmap mainImage;
+    private String imageUrl;
     private String cityName;
     private String aboutDescription;
 
-    public Hotel(String key, Bitmap mainImage,String cityName, String aboutDescription) {
+    public Hotel(String key, String imageUrl,String cityName, String aboutDescription) {
         this.key = key;
-        this.mainImage = mainImage;
+        this.imageUrl = imageUrl;
         this.cityName = cityName;
         this.aboutDescription = aboutDescription;
     }
@@ -26,8 +26,8 @@ public class Hotel implements Serializable {
         return aboutDescription;
     }
 
-    public Bitmap getImage() {
-        return mainImage;
+    public String getImage() {
+        return imageUrl;
     }
 
     public String getCityName() {

@@ -38,7 +38,7 @@ public class HotelListFragment extends Fragment {
     String TAG = "firebase_test";
     HotelAdapter adapter;
     ProgressDialog progressDialog;
-    List<Hotel> cities = new ArrayList<>();
+    List<Hotel> hotels = new ArrayList<>();
 
     @Nullable
     @Override
@@ -55,7 +55,7 @@ public class HotelListFragment extends Fragment {
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
-        adapter = new HotelAdapter(cities);
+        adapter = new HotelAdapter(hotels);
         recyclerView.setAdapter(adapter);
 
         progressDialog = new ProgressDialog(getContext());
@@ -79,44 +79,33 @@ public class HotelListFragment extends Fragment {
 
     private void fetchData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(("cities"))
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            new Thread(() -> {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-                                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                                    StorageReference storageRef = storage.getReference();
-                                    String imageName = document.getData().get("mainImage").toString();
-                                    StorageReference imageRef = storageRef.child("travel/" + imageName);
-                                    try {
-                                        byte[] bytes = Tasks.await(imageRef.getBytes(Long.MAX_VALUE));
-                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                        Hotel hotel = new Hotel(
-                                                document.getId(),
-                                                bitmap,
-                                                document.getData().get("cityName").toString(),
-                                                document.getData().get("aboutDescription").toString()
-                                        );
-                                        cities.add(hotel);
-                                    } catch (ExecutionException ex) {
-                                        Log.e(TAG, "Error downloading image.", ex.getCause());
-                                    } catch (InterruptedException ex) {
-                                        Log.e(TAG, "Task interrupted.", ex);
-                                    }
-                                }
-                                getActivity().runOnUiThread(() -> {
-                                    progressDialog.dismiss();
-                                    adapter.notifyDataSetChanged();
-                                });
-                            }).start();
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
+        progressDialog.show();
+
+        db.collection("cities").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String imageName = document.getString("mainImage");
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReference().child("travel/" + imageName);
+
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        Hotel hotel = new Hotel(
+                                document.getId(),
+                                uri.toString(),
+                                document.getString("cityName"),
+                                document.getString("aboutDescription")
+                        );
+                        hotels.add(hotel);
+                        adapter.notifyDataSetChanged();
+                    }).addOnFailureListener(exception -> {
+                        // Handle any errors
+                    });
+                }
+                progressDialog.dismiss();
+            } else {
+                // Handle the error
+                progressDialog.dismiss();
+            }
+        });
     }
 }
