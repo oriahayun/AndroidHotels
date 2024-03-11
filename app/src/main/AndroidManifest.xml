@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,28 +14,14 @@
         android:theme="@style/Theme.HotelIntroduce"
         tools:targetApi="31">
         <activity
-            android:name=".HotelPageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AddHotelActivity"
-            android:exported="true" >
-
-        </activity>
-        <activity
-            android:name=".HotelListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true" >
+            android:name=".view.MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
     </application>
 
 </manifest>
