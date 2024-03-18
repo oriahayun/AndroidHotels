@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Hotel Introduce</string>
     <string name="welcomeStr">Your own hotel introduce application to help you plan your next vacation!</string>
+    <string name="hotels">Hotels</string>
+    <string name="select_a_hotel">Select a hotel below to see more details on each hotel and our top exploring recommendations</string>
 </resources>

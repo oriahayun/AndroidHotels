@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HotelIntroduce"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCFc7AZvw-Oyh5kRCb6EQSZAjI15iMkFbg" />
         <activity
             android:name=".view.LoginActivity"
             android:exported="true"
@@ -22,11 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.MainActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
-        </activity>
+         
         <activity
             android:name=".view.RegisterActivity"
             android:exported="true"
