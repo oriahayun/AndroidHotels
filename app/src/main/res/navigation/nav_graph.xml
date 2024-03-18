@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/hotelListFragment"
+    android:id="@+id/nav_graph">
+    <fragment
+        android:id="@+id/hotelListFragment"
+        android:name="com.introduce.hotel.view.HotelListFragment"
+        android:label="HotelListFragment" >
+        <action
+            android:id="@+id/action_hotelListFragment_to_hotelPageFragment"
+            app:destination="@id/hotelPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hotelPageFragment"
+        android:name="com.introduce.hotel.view.HotelPageFragment"
+        android:label="HotelPageFragment"/>
+    <fragment
+        android:id="@+id/addHotelFragment3"
+        android:name="com.introduce.hotel.view.AddHotelFragment"
+        android:label="AddHotelFragment" />
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.introduce.hotel.view.MapsFragment"
+        android:label="MapsFragment">
+        <action
+            android:id="@+id/action_mapsFragment_to_hotelPageFragment"
+            app:destination="@id/hotelPageFragment" />
+    </fragment>
+    <!-- 추가된 fragment -->
+    <fragment
+        android:id="@+id/myHotelListFragment"
+        android:name="com.introduce.hotel.view.MyHotelListFragment"
+        android:label="MyHotelListFragment" >
+        <action
+            android:id="@+id/action_myHotelListFragment_to_hotelPageFragment"
+            app:destination="@id/hotelPageFragment" />
+        <action
+            android:id="@+id/action_myHotelListFragment_to_addHotelFragment3"
+            app:destination="@id/addHotelFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/weatherFragment"
+        android:name="com.introduce.hotel.view.WeatherFragment"
+        android:label="WeatherFragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.introduce.hotel.view.ProfileFragment"
+        android:label="ProfileFragment" />
+</navigation>
