@@ -64,7 +64,23 @@ class HotelPageFragment : Fragment() {
             Picasso.get().load(currentHotel.imageUrl).into(imageView)
         }
     }
- 
+    private val imagePickerLauncher = registerForActivityResult<String, Uri>(
+        ActivityResultContracts.GetContent(),
+        object : ActivityResultCallback<Uri?> {
+            override fun onActivityResult(result: Uri?) {
+                if (result != null) {
+                    try {
+                        result?.let {
+                            Picasso.get().load(it).into(imageView)
+                            selectedImageUri = it
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         firebaseFirestore = FirebaseFirestore.getInstance()
@@ -93,10 +109,83 @@ class HotelPageFragment : Fragment() {
         deleteButton = rootView.findViewById(R.id.deleteButton)
         imageView = rootView.findViewById(R.id.hotelImage)
 
+
+
+        imageView.setOnClickListener { openGallery() }
+
+        buttonSaveEdits.setOnClickListener {
+            val newHotelName = editTextHotelName.text.toString()
+            val newDescription = editTextHotelDescription.text.toString()
+
+            selectedImageUri?.let { uri ->
+                    val storageRef = FirebaseStorage.getInstance().getReference().child("hotel_images/${newHotelName}")
+                    storageRef.putFile(uri)
+                        .addOnSuccessListener { taskSnapshot ->
+                            storageRef.downloadUrl.addOnSuccessListener { imageUrl ->
+                                currentHotel.imageUrl = imageUrl.toString()
+                                firebaseFirestore.collection("Hotels").document(currentHotel.key.toString())
+                                    .update("name", newHotelName, "description", newDescription,"imageUrl", imageUrl.toString(),"latitude", selectedLocation!!.latitude,"longitude", selectedLocation!!.longitude)
+
+                                    .addOnSuccessListener {
+                                        currentHotel.apply {
+                                            hotelName = newHotelName
+                                            description = newDescription
+                                        }
+                                        hotelDao.update(currentHotel)
+                                        Toast.makeText(context, "Hotel updated successfully", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener { Toast.makeText(context, "Error updating hotel", Toast.LENGTH_SHORT).show() }
+
+                                Toast.makeText(context, "Image updated successfully", Toast.LENGTH_SHORT).show()
+
+                            }
+                        }
+                        .addOnFailureListener { Toast.makeText(context, "Error uploading image", Toast.LENGTH_SHORT).show() }
+
+            }
+
+        }
+
+        deleteButton.setOnClickListener {
+            currentHotel.key?.let { hotelKey ->
+                firebaseFirestore.collection("Hotels").document(hotelKey)
+                        .delete()
+                        .addOnSuccessListener {
+                            hotelDao.delete(currentHotel)
+                            Toast.makeText(context, "Hotel deleted successfully", Toast.LENGTH_SHORT).show()
+                            activity?.onBackPressed()
+                        }
+                        .addOnFailureListener { Toast.makeText(context, "Error deleting hotel", Toast.LENGTH_SHORT).show() }
+            }
+        }
+
         return rootView
     }
 
-
+    private fun openGallery() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireContext() as Activity, arrayOf<String>(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_CODE_GALLERY
+            )
+        } else {
+            imagePickerLauncher.launch("image/*")
+        }
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        //here i am checking if the phone has granted permission to the app to access gallery
+        if (requestCode == REQUEST_CODE_GALLERY) {
+            imagePickerLauncher.launch("image/*")
+            return
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
     private fun setCurrentHotel(bundle: Bundle) {
         val hotelId = bundle.getString("hotelId")
         val userEmail = bundle.getString("userEmail")
@@ -112,6 +201,19 @@ class HotelPageFragment : Fragment() {
             val marker = map.addMarker(MarkerOptions().position(hotelPosition).title(hotelName).snippet(hotelId))
 
         }
-
+        val isEdit = bundle.getBoolean("isEdit")
+        if (!isEdit) {
+            editTextHotelName.isEnabled = false
+            editTextHotelDescription.isEnabled = false
+            buttonSaveEdits.visibility = View.GONE
+            deleteButton.visibility = View.GONE
+            imageView.isEnabled = false
+        }else{
+            map.setOnMapClickListener { latLng ->
+                selectedLocation = latLng
+                map.clear()
+                map.addMarker(MarkerOptions().position(latLng))
+            }
+        }
     }
 }
