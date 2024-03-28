@@ -43,8 +43,8 @@
                         android:layout_height="220dp"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="32dp"
-                        android:src="@drawable/et_bg_round_corner"
-                        android:scaleType="centerCrop"
+                        android:padding="30dp"
+                        android:background="@drawable/no_user"
                         app:cornerRadius="24dp"
                         android:elevation="4dp"  />
 
@@ -177,7 +177,7 @@
                 android:layout_marginLeft="100dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="100dp"
-                android:background="@drawable/designbutton"
+                android:background="@drawable/round_button_background"
                 android:text="Cancel"
                 android:textColor="@color/white" />
 

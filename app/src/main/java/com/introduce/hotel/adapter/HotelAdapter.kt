@@ -42,6 +42,7 @@ class HotelAdapter(
                 putString("hotelName", hotel.hotelName)
                 putString("imageUrl", hotel.imageUrl)
                 putString("description", hotel.description)
+                putString("review", hotel.review)
                 putDouble("latitude", hotel.latitude ?: 0.0)
                 putDouble("longitude", hotel.longitude ?: 0.0)
                 putBoolean("isEdit", isEdit)

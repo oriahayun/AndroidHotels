@@ -92,28 +92,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun chooseImage() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireContext() as Activity, arrayOf<String>(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_CODE_GALLERY
-            )
-        } else {
-            imagePickerLauncher.launch("image/*")
-        }
-    }
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        //here i am checking if the phone has granted permission to the app to access gallery
-        if (requestCode == REQUEST_CODE_GALLERY) {
-            imagePickerLauncher.launch("image/*")
-            return
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        imagePickerLauncher.launch("image/*")
     }
 
     private fun updateProfile() {

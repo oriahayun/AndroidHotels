@@ -61,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun registerUser() {
         val email = findViewById<EditText>(R.id.registerEmailAddress).text.toString().trim()
         val password = findViewById<EditText>(R.id.registerPassword).text.toString().trim()
-
+        val registerID   = findViewById<EditText>(R.id.registerID).text.toString().trim()
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Email or password should not be empty", Toast.LENGTH_LONG).show()
             return
@@ -81,6 +81,7 @@ class RegisterActivity : AppCompatActivity() {
                                                 // Here we get the image URL
                                                 val profileUpdates = UserProfileChangeRequest.Builder()
                                                         .setPhotoUri(uri)
+                                                    .setDisplayName(registerID)
                                                         .build()
 
                                                 user.updateProfile(profileUpdates)

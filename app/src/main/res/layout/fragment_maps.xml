@@ -8,6 +8,7 @@
         android:id="@+id/mapsFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
         android:layout_height="match_parent"  />
 
     <LinearLayout
@@ -15,6 +16,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:padding="8dp">
 
         <EditText

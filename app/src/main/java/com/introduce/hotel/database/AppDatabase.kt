@@ -8,7 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.introduce.hotel.model.HotelEntity
 
-@Database(entities = [HotelEntity::class], version = 4)
+@Database(entities = [HotelEntity::class], version = 5)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun hotelDao(): HotelDao

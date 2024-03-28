@@ -1,5 +1,7 @@
 package com.introduce.hotel.view
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -29,6 +32,7 @@ class MapsFragment : Fragment() {
 
     private val callback = OnMapReadyCallback { googleMap ->
         map = googleMap
+        map.getUiSettings().setZoomControlsEnabled(true);
         setupMapListeners()
         loadHotels()
     }
@@ -41,6 +45,15 @@ class MapsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
         initializeViews(view)
         setupButtonListeners()
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                1
+            )
+        }
         return view
     }
 
@@ -82,6 +95,8 @@ class MapsFragment : Fragment() {
                 val userEmail = document.getString("userEmail") ?: ""
                 val imageUrl = document.getString("imageUrl") ?: ""
                 val description = document.getString("description") ?: ""
+                val address = document.getString("address") ?: ""
+                val review = document.getString("review") ?: ""
                 val latitude = document.getDouble("latitude") ?: 0.0
                 val longitude = document.getDouble("longitude") ?: 0.0
                 bundle.putString("hotelId", hotelId)
@@ -89,6 +104,8 @@ class MapsFragment : Fragment() {
                 bundle.putString("userEmail", userEmail)
                 bundle.putString("imageUrl", imageUrl)
                 bundle.putString("description", description)
+                bundle.putString("address", address)
+                bundle.putString("review", review)
                 bundle.putDouble("latitude", latitude)
                 bundle.putDouble("longitude", longitude)
                 NavHostFragment.findNavController(this)
@@ -113,7 +130,7 @@ class MapsFragment : Fragment() {
                         if (latitude != 0.0 && longitude != 0.0) {
                             val hotelPosition = LatLng(latitude, longitude)
                             val marker = map.addMarker(MarkerOptions().position(hotelPosition).title(hotelName).snippet(hotelId))
-                            marker?.tag = document // 마커에 Firestore 문서 추가
+                            marker?.tag = document
                         }
                     }
                 } catch (e: Exception) {

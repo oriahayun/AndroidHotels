@@ -1,11 +1,8 @@
 package com.introduce.hotel.viewmodel;
 
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import com.introduce.hotel.model.HotelEntity
 import com.introduce.hotel.database.HotelDao
@@ -17,9 +14,6 @@ import kotlinx.coroutines.tasks.await
 
 class HotelViewModel(private val hotelDao: HotelDao) : ViewModel() {
     val allHotels: LiveData<List<HotelEntity>> = hotelDao.getAll()
-
-
-
     fun fetchHotelsFromFirestore() {
         CoroutineScope(Dispatchers.IO).launch {
             val db = FirebaseFirestore.getInstance()
@@ -36,8 +30,10 @@ class HotelViewModel(private val hotelDao: HotelDao) : ViewModel() {
                             hotelName = document.getString("name") ?: "",
                             imageUrl = imageName ?: "",
                             description = document.getString("description") ?: "",
+                            review = document.getString("review") ?: "",
                             latitude = document.getDouble("latitude") ?: 0.0,
-                            longitude = document.getDouble("longitude") ?: 0.0
+                            longitude = document.getDouble("longitude") ?: 0.0,
+                            address =  document.getString("address") ?: ""
                         )
                         hotels.add(hotel)
                     }
@@ -71,8 +67,10 @@ class HotelViewModel(private val hotelDao: HotelDao) : ViewModel() {
                             hotelName = document.getString("name") ?: "",
                             imageUrl = imageName ?: "",
                             description = document.getString("description") ?: "",
+                            review = document.getString("review") ?: "",
                             latitude = document.getDouble("latitude") ?: 0.0,
-                            longitude = document.getDouble("longitude") ?: 0.0
+                            longitude = document.getDouble("longitude") ?: 0.0,
+                            address =  document.getString("address") ?: ""
                         )
                         hotels.add(hotel)
                     }

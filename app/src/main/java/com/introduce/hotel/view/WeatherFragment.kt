@@ -49,38 +49,11 @@ class WeatherFragment : Fragment() {
 
         return view
     }
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        //here i am checking if the phone has granted permission to the app to access gallery
-        if (requestCode == 1) {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener(requireActivity(), OnSuccessListener { location ->
-                    if (location != null) {
-                        gpsTextView.text = String.format("GPS Coordinates: %.1f, %.1f", location.latitude, location.longitude)
-                        fetchWeatherData(location.latitude, location.longitude)
-                    } else {
-                        progressBar.visibility = View.GONE
-                        gpsTextView.text = String.format("GPS Coordinates: null")
-                    }
-                })
-            return
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
+
     private fun requestLocation() {
-        progressBar.visibility = View.VISIBLE // 로딩 시작
-        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                    1
-            )
-        }
+        progressBar.visibility = View.VISIBLE
+
+
         fusedLocationClient.lastLocation
                 .addOnSuccessListener(requireActivity(), OnSuccessListener { location ->
                     if (location != null) {
@@ -88,7 +61,8 @@ class WeatherFragment : Fragment() {
                         fetchWeatherData(location.latitude, location.longitude)
                     } else {
                         progressBar.visibility = View.GONE
-                        gpsTextView.text = String.format("GPS Coordinates: null")
+                        fetchWeatherData(32.109333, 34.855499)
+                        gpsTextView.text = String.format("GPS Coordinates: 32.109333, 34.855499")
                     }
                 })
     }
@@ -102,12 +76,12 @@ class WeatherFragment : Fragment() {
                             temperatureTextView.text = "Temperature: ${weather.current.temperature_2m}°C"
                             windSpeedTextView.text = "Wind Speed: ${weather.current.wind_speed_10m}km/h"
                         }
-                        progressBar.visibility = View.GONE // 로딩 완료
+                        progressBar.visibility = View.GONE
                     }
 
                     override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
                         // Error handling here
-                        progressBar.visibility = View.GONE // 로딩 완료
+                        progressBar.visibility = View.GONE
                     }
                 })
     }

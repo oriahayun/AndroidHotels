@@ -11,8 +11,10 @@ data class HotelEntity(
         var hotelName: String,
         var imageUrl: String,
         var description: String,
+        var review: String,
         var latitude: Double,
-        var longitude: Double
+        var longitude: Double,
+        var address: String
 ) {
 
     constructor(
@@ -21,9 +23,11 @@ data class HotelEntity(
             hotelName: String,
             imageUrl: String,
             description: String,
+            review: String,
             latitude: Double,
-            longitude: Double
-    ) : this(0, key,userEmail, hotelName,  imageUrl, description, latitude, longitude)
+            longitude: Double,
+            address: String
+    ) : this(0, key,userEmail, hotelName,  imageUrl, description,review, latitude, longitude,address)
 
 
 }
