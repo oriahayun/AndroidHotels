@@ -16,6 +16,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
 import androidx.room.Room
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -65,6 +66,19 @@ class HotelPageFragment : Fragment() {
             editTextHotelName.setText(currentHotel.hotelName)
             map_edittext.setText(currentHotel.address)
             textViewReview.setText(currentHotel.review)
+            var userName = "";
+            val user = mAuth.currentUser
+            user?.let {
+                userName = user.displayName.toString()
+            }
+            val reviews = currentHotel.review.split("\n")
+            for (review in reviews) {
+                if (review.startsWith("$userName:")) {
+                    editTextReview.setText(review.split(':')[1])
+                }
+            }
+
+
             editTextHotelDescription.setText(currentHotel.description)
             Picasso.get().load(currentHotel.imageUrl).into(imageView)
             val hotelPosition = LatLng(currentHotel.latitude, currentHotel.longitude)
@@ -125,12 +139,24 @@ class HotelPageFragment : Fragment() {
             val newHotelName = editTextHotelName.text.toString()
             val newDescription = editTextHotelDescription.text.toString()
             val user = mAuth.currentUser
-            var userNAme = "";
+            var userName = "";
             user?.let {
-                userNAme = user.displayName.toString()
+                userName = user.displayName.toString()
             }
             val newAddress = map_edittext.text.toString()
-            val newReview = textViewReview.text.toString() + "\n" + userNAme+":" +editTextReview.text.toString()
+            val regex = Regex("$userName:.*")
+            val existingText = textViewReview.text.toString()
+            var newReview  = editTextReview.text.toString()
+            if (newReview.isEmpty()){
+                newReview = existingText
+            }else{
+                newReview = if (existingText.contains(regex)) {
+                    existingText.replace(regex, "$userName: $newReview")
+                } else {
+                    "$existingText\n$userName: $newReview"
+                }
+            }
+
             if(selectedImageUri == null){
                 val latitude1 = if (selectedLocation != null) selectedLocation!!.latitude else currentHotel.latitude
                 val longitude1 = if (selectedLocation != null) selectedLocation!!.longitude else currentHotel.longitude
@@ -139,7 +165,7 @@ class HotelPageFragment : Fragment() {
                         "description", newDescription,
                         "review",newReview,
                         "imageUrl",    currentHotel.imageUrl.toString(),
-                        "addres",newAddress,
+                        "address",newAddress,
                         "latitude",latitude1 , "longitude",longitude1
 
                     )
@@ -153,7 +179,9 @@ class HotelPageFragment : Fragment() {
                             longitude = longitude1
                         }
                         hotelDao.update(currentHotel)
+                        textViewReview.setText(currentHotel.review)
                         Toast.makeText(context, "Hotel updated successfully", Toast.LENGTH_SHORT).show()
+                        NavHostFragment.findNavController(this).popBackStack()
                     }
                     .addOnFailureListener { Toast.makeText(context, "Error updating hotel", Toast.LENGTH_SHORT).show() }
 
@@ -185,7 +213,9 @@ class HotelPageFragment : Fragment() {
                                             longitude = longitude1
                                         }
                                         hotelDao.update(currentHotel)
+                                        textViewReview.setText(currentHotel.review)
                                         Toast.makeText(context, "Hotel updated successfully", Toast.LENGTH_SHORT).show()
+                                        NavHostFragment.findNavController(this).popBackStack()
                                     }
                                     .addOnFailureListener { Toast.makeText(context, "Error updating hotel", Toast.LENGTH_SHORT).show() }
 
@@ -266,6 +296,7 @@ class HotelPageFragment : Fragment() {
             latitude,
             longitude,
              address)
+
         if (latitude != 0.0 && longitude != 0.0) {
             val hotelPosition = LatLng(latitude, longitude)
             val marker = map.addMarker(MarkerOptions().position(hotelPosition).title(hotelName).snippet(hotelId))
